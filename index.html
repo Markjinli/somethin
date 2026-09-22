@@ -1,0 +1,887 @@
+<title>FlClash 与 Verge 网络层对比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  :root {
+    --ground: #F6F7F9;
+    --surface: #FFFFFF;
+    --surface-2: #F1F3F7;
+    --ink: #12161C;
+    --ink-soft: #2E3742;
+    --muted: #5A6472;
+    --rule: #DDE1E8;
+    --rule-strong: #C3CAD5;
+    --fl: #0B6E85;
+    --fl-wash: #E6F1F5;
+    --vg: #9C5A16;
+    --vg-wash: #F7EEE2;
+    --both: #4A5568;
+    --both-wash: #EDEFF3;
+    --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, 'Microsoft YaHei', monospace;
+    --measure: 68ch;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0D1014;
+      --surface: #141920;
+      --surface-2: #1A2029;
+      --ink: #E7EBF1;
+      --ink-soft: #C6CEDA;
+      --muted: #949EAD;
+      --rule: #242B35;
+      --rule-strong: #39424F;
+      --fl: #45BCD6;
+      --fl-wash: #122A33;
+      --vg: #DFA055;
+      --vg-wash: #2E2317;
+      --both: #8A94A4;
+      --both-wash: #1C222B;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0D1014;
+    --surface: #141920;
+    --surface-2: #1A2029;
+    --ink: #E7EBF1;
+    --ink-soft: #C6CEDA;
+    --muted: #949EAD;
+    --rule: #242B35;
+    --rule-strong: #39424F;
+    --fl: #45BCD6;
+    --fl-wash: #122A33;
+    --vg: #DFA055;
+    --vg-wash: #2E2317;
+    --both: #8A94A4;
+    --both-wash: #1C222B;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin-inline: auto;
+    padding-inline: 20px;
+    padding-block: 0 96px;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead {
+    padding-block: 56px 32px;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 20px;
+  }
+
+  h1 {
+    font-size: clamp(30px, 5.2vw, 46px);
+    line-height: 1.08;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+    margin: 0 0 20px;
+    max-width: 22ch;
+  }
+
+  .standfirst {
+    font-size: 17.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0 0 36px;
+  }
+
+  .meta {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+    gap: 20px 32px;
+    margin: 0;
+  }
+
+  .meta dt {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.11em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 5px;
+  }
+
+  .meta dd {
+    margin: 0;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- sticky nav ---------- */
+
+  .toc {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--ground);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 8px;
+  }
+
+  .toc ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    list-style: none;
+    margin: 0;
+    padding: 11px 0;
+  }
+
+  .toc a {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.03em;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 9px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+  }
+
+  .toc a:hover,
+  .toc a:focus-visible {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface);
+  }
+
+  /* ---------- sections ---------- */
+
+  section {
+    padding-block: 48px 8px;
+    scroll-margin-top: 78px;
+  }
+
+  section + section {
+    border-top: 1px solid var(--rule);
+  }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: -0.014em;
+    line-height: 1.2;
+    text-wrap: balance;
+    margin: 0 0 8px;
+  }
+
+  .sec-note {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 28px;
+  }
+
+  p {
+    max-width: var(--measure);
+    margin: 0 0 18px;
+  }
+
+  .lede {
+    font-size: 18px;
+    line-height: 1.62;
+    color: var(--ink-soft);
+  }
+
+  strong {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.855em;
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+
+  .fl-t { color: var(--fl); font-weight: 600; }
+  .vg-t { color: var(--vg); font-weight: 600; }
+
+  /* ---------- verdict ---------- */
+
+  .verdict {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 16px;
+    margin-top: 26px;
+  }
+
+  .verdict-card {
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 20px 22px 22px;
+  }
+
+  .verdict-card.fl { --accent: var(--fl); }
+  .verdict-card.vg { --accent: var(--vg); }
+
+  .verdict-card h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 12px;
+  }
+
+  .verdict-card p {
+    margin: 0;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  .verdict-card .kicker {
+    display: block;
+    font-size: 17px;
+    font-weight: 600;
+    color: var(--ink);
+    margin-bottom: 8px;
+    letter-spacing: -0.01em;
+  }
+
+  /* ---------- table ---------- */
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    margin-top: 8px;
+  }
+
+  table {
+    border-collapse: collapse;
+    width: 100%;
+    min-width: 740px;
+    font-size: 14px;
+  }
+
+  thead th {
+    position: sticky;
+    top: 0;
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+  }
+
+  thead th.c-fl { color: var(--fl); }
+  thead th.c-vg { color: var(--vg); }
+
+  tbody th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--ink);
+    padding: 15px 16px;
+    vertical-align: top;
+    white-space: nowrap;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  tbody td {
+    padding: 15px 16px;
+    vertical-align: top;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    border-bottom: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: none; }
+
+  tbody td.c-fl { background: var(--fl-wash); }
+  tbody td.c-vg { background: var(--vg-wash); }
+
+  /* ---------- figure ---------- */
+
+  figure {
+    margin: 20px 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 22px 20px 18px;
+  }
+
+  .fig-scroll { overflow-x: auto; }
+
+  figure svg {
+    display: block;
+    width: 100%;
+    min-width: 620px;
+    height: auto;
+    color: var(--ink-soft);
+  }
+
+  /* SVG text/colors set here, not in presentation attributes:
+     var() inside an attribute is inconsistently supported. */
+  figure svg text { font-family: var(--sans); }
+  figure svg text.mono { font-family: var(--mono); }
+  figure svg .ink-fl { fill: var(--fl); }
+  figure svg .ink-vg { fill: var(--vg); }
+  figure svg .stroke-fl { stroke: var(--fl); }
+  figure svg .stroke-vg { stroke: var(--vg); }
+  figure svg marker.ah-fl path { fill: var(--fl); }
+  figure svg marker.ah-vg path { fill: var(--vg); }
+
+  figcaption {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ---------- divergence rows ---------- */
+
+  .forks {
+    display: flex;
+    flex-direction: column;
+    gap: 34px;
+    margin-top: 26px;
+  }
+
+  .fork-head {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 14px;
+  }
+
+  .fork-num {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.08em;
+  }
+
+  .fork-head h3 {
+    font-size: 18.5px;
+    font-weight: 600;
+    letter-spacing: -0.012em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .fork-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 14px;
+  }
+
+  .side {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 16px 18px 18px;
+  }
+
+  .side.fl { --accent: var(--fl); }
+  .side.vg { --accent: var(--vg); }
+
+  .side-tag {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 9px;
+  }
+
+  .side p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+
+  .side p + p { margin-top: 10px; }
+
+  /* ---------- shared / delegated ---------- */
+
+  .delegated {
+    list-style: none;
+    margin: 26px 0 0;
+    padding: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .delegated li {
+    display: grid;
+    grid-template-columns: 152px 1fr;
+    gap: 6px 20px;
+    align-items: start;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 15px 18px;
+  }
+
+  .delegated .what {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--both);
+    letter-spacing: 0.01em;
+  }
+
+  .delegated .detail {
+    font-size: 14.5px;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+
+  @media (max-width: 600px) {
+    .delegated li { grid-template-columns: 1fr; gap: 6px; }
+  }
+
+  .callout {
+    margin-top: 30px;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 22px 24px;
+  }
+
+  .callout h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--both);
+    margin: 0 0 14px;
+  }
+
+  .callout p { font-size: 15px; color: var(--ink-soft); }
+  .callout p:last-child { margin-bottom: 0; }
+
+  /* ---------- caveats ---------- */
+
+  .caveats {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 24px;
+  }
+
+  .caveat {
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 17px 20px;
+  }
+
+  .caveat h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin: 0 0 7px;
+    color: var(--ink);
+  }
+
+  .caveat p {
+    margin: 0;
+    font-size: 14.5px;
+    line-height: 1.58;
+    color: var(--muted);
+  }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    margin-top: 56px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 84ch;
+    margin: 0 0 10px;
+    overflow-wrap: anywhere;
+  }
+
+  a { color: var(--fl); }
+  a:focus-visible,
+  .toc a:focus-visible { outline: 2px solid var(--fl); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">源码级对比 · 2026-09-22</p>
+    <h1>FlClash 与 Verge 网络层对比</h1>
+    <p class="standfirst">
+      两套开源代理客户端的 VPN 基本功能链路怎么搭的:核心引擎、控制面、TUN 虚拟网卡、提权、系统代理、DNS、路由。只读源码,不跑步。
+    </p>
+    <dl class="meta">
+      <div>
+        <dt>FlClash</dt>
+        <dd>commit c7be702 · 2026-09-17<br>Dart / Flutter · 964 文件</dd>
+      </div>
+      <div>
+        <dt>Clash Verge Rev</dt>
+        <dd>commit 22e3f1a · 2026-09-22<br>Rust / Tauri · 709 文件</dd>
+      </div>
+      <div>
+        <dt>源码位置</dt>
+        <dd>C:\Users\J\clash-compare\</dd>
+      </div>
+    </dl>
+  </header>
+
+  <nav class="toc" aria-label="目录">
+    <ul>
+      <li><a href="#verdict">结论</a></li>
+      <li><a href="#table">逐项对比</a></li>
+      <li><a href="#control">控制面拓扑</a></li>
+      <li><a href="#forks">四个分歧点</a></li>
+      <li><a href="#shared">两边都没写的</a></li>
+      <li><a href="#caveats">读取范围</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <section id="verdict">
+      <h2>结论</h2>
+      <p class="sec-note">一个自包含,一个薄编排</p>
+      <p class="lede">
+        两家都叫"Clash 客户端",但"基础设施"这个词落在它们身上指的是完全不同的东西。<span class="fl-t">FlClash</span> 把整条链路都收进自己仓库:核心是自己 fork 的、控制协议是自己造的、提权服务是自己写的。Clash Verge Rev 反过来,把自己压成一层薄编排——核心用上游原版二进制,控制走核心自带的 API,连提权服务都在另一个仓库里。
+      </p>
+      <div class="verdict">
+        <div class="verdict-card fl">
+          <h3>FlClash</h3>
+          <p><span class="kicker">自包含:全部源码在仓库里</span>核心 fork + 自研 IPC 协议 + 仓库内 Rust 提权服务。版本完全确定,组件边界少。代价是要自己维护一整套协议,而且核心跟不上上游。</p>
+        </div>
+        <div class="verdict-card vg">
+          <h3>Clash Verge Rev</h3>
+          <p><span class="kicker">薄编排:关键件在仓库外</span>上游 stock 核心 + 核心自带 REST API + 外部服务仓库(预编译二进制)。核心永远最新,服务能独立升级。代价是多出一整套版本协商复杂度。</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="table">
+      <h2>逐项对比</h2>
+      <p class="sec-note">八个维度 · 左侧青为 FlClash,右侧琥珀为 Verge</p>
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">维度</th>
+              <th scope="col" class="c-fl">FlClash</th>
+              <th scope="col" class="c-vg">Clash Verge Rev</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">核心引擎</th>
+              <td class="c-fl">mihomo <strong>个人 fork</strong>(<code>chen08209/Clash.Meta</code>,分支 <code>FlClash</code>),git 子模块 + <code>go.mod replace</code>,构建时<strong>编译进客户端</strong></td>
+              <td class="c-vg">上游 <strong>stock mihomo</strong>,构建时从 GitHub 下载为 Tauri sidecar。<code>verge-mihomo</code> / <code>verge-mihomo-alpha</code> 只是稳定版与 alpha,不是两个引擎</td>
+            </tr>
+            <tr>
+              <th scope="row">版本策略</th>
+              <td class="c-fl">子模块 <strong>commit SHA 钉死</strong>,无 tag。可复现,但核心行为不随上游更新</td>
+              <td class="c-vg"><strong>不钉版本</strong>,构建时取 <code>releases/latest</code>。永远最新,但不可复现</td>
+            </tr>
+            <tr>
+              <th scope="row">控制面</th>
+              <td class="c-fl"><strong>自造 IPC</strong>:App 当服务端,核心反向连入。4 字节长度前缀 + JSON 帧,上限 64 MiB</td>
+              <td class="c-vg">核心<strong>自带的 REST API</strong>,走命名管道 / unix socket(默认关掉 TCP 端口)</td>
+            </tr>
+            <tr>
+              <th scope="row">配置下发</th>
+              <td class="c-fl">磁盘<strong>文件路径</strong>:App 写 <code>config.yaml</code>,核心自己读</td>
+              <td class="c-vg">sidecar 模式传路径;<strong>service 模式传内联数据</strong>,由服务自己落盘</td>
+            </tr>
+            <tr>
+              <th scope="row">进程模型</th>
+              <td class="c-fl">桌面独立进程;Android <strong>进程内</strong> <code>libclash.so</code>(CGO c-shared)</td>
+              <td class="c-vg">仅桌面。Sidecar / Service 两种<strong>互斥运行模式</strong></td>
+            </tr>
+            <tr>
+              <th scope="row">提权产物</th>
+              <td class="c-fl">在仓库内:<code>services/helper/</code> Rust 源码</td>
+              <td class="c-vg">在仓库外:<code>clash-verge-service-ipc</code> v2.7.3,预编译二进制</td>
+            </tr>
+            <tr>
+              <th scope="row">macOS 路线</th>
+              <td class="c-fl"><strong>没有 helper</strong>。<code>osascript</code> 提权后把核心设成 <strong>setuid root</strong></td>
+              <td class="c-vg"><strong>launchd LaunchDaemon</strong> helper</td>
+            </tr>
+            <tr>
+              <th scope="row">系统代理</th>
+              <td class="c-fl">仓库内自研:C++ WinINet 插件 / Dart / Kotlin</td>
+              <td class="c-vg">外部 crate <code>sysproxy-rs</code>,外加 30 秒 guard 循环反复重设</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <section id="control">
+      <h2>控制面拓扑</h2>
+      <p class="sec-note">整个对比里最反直觉的一点</p>
+      <p>
+        FlClash <strong>完全不用</strong> mihomo 的 REST API——<code>external-controller</code> 默认关闭,代码里根本没用它。它自己造了一套协议,还<strong>把服务端放在 App 侧</strong>:App 创建监听,核心作为客户端连进来。下图两行的方框位置完全对齐,只有箭头方向不同,差异一眼可见。
+      </p>
+      <figure>
+        <div class="fig-scroll">
+          <svg viewBox="0 0 720 232" role="img" aria-label="拓扑对比:FlClash 中核心进程反向连入充当服务端的 App;Verge 中 GUI 主动调用核心自带的 REST API。箭头方向相反。">
+            <defs>
+              <marker id="ah-fl" class="ah-fl" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0.5,1 L9,5 L0.5,9 Z"></path>
+              </marker>
+              <marker id="ah-vg" class="ah-vg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0.5,1 L9,5 L0.5,9 Z"></path>
+              </marker>
+            </defs>
+
+            <!-- row 1 : FlClash -->
+            <text class="mono ink-fl" x="40" y="30" font-size="13" font-weight="600" letter-spacing="1">FlClash</text>
+
+            <rect x="40" y="44" width="190" height="56" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text x="135" y="70" font-size="15" font-weight="600" text-anchor="middle" fill="currentColor">FlClash App</text>
+            <text class="mono" x="135" y="88" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">IPC 服务端</text>
+
+            <rect x="490" y="44" width="190" height="56" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text x="585" y="70" font-size="15" font-weight="600" text-anchor="middle" fill="currentColor">FlClashCore</text>
+            <text class="mono" x="585" y="88" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">独立进程</text>
+
+            <text class="mono ink-fl" x="360" y="60" font-size="12" text-anchor="middle">核心反向连入</text>
+            <text class="mono" x="360" y="76" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">4 字节长度 + JSON 帧</text>
+            <line class="stroke-fl" x1="482" y1="92" x2="240" y2="92" stroke-width="2" marker-end="url(#ah-fl)"></line>
+
+            <!-- divider -->
+            <line x1="40" y1="128" x2="680" y2="128" stroke="currentColor" stroke-width="1" opacity="0.2" stroke-dasharray="2 5"></line>
+
+            <!-- row 2 : Verge -->
+            <text class="mono ink-vg" x="40" y="162" font-size="13" font-weight="600" letter-spacing="1">Verge</text>
+
+            <rect x="40" y="176" width="190" height="56" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text x="135" y="202" font-size="15" font-weight="600" text-anchor="middle" fill="currentColor">Verge GUI</text>
+            <text class="mono" x="135" y="220" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">客户端</text>
+
+            <rect x="490" y="176" width="190" height="56" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text x="585" y="202" font-size="15" font-weight="600" text-anchor="middle" fill="currentColor">mihomo</text>
+            <text class="mono" x="585" y="220" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">REST API 服务端</text>
+
+            <text class="mono ink-vg" x="360" y="192" font-size="12" text-anchor="middle">调用核心自带 API</text>
+            <text class="mono" x="360" y="208" font-size="10.5" text-anchor="middle" fill="currentColor" opacity="0.6">命名管道 / unix socket</text>
+            <line class="stroke-vg" x1="238" y1="224" x2="480" y2="224" stroke-width="2" marker-end="url(#ah-vg)"></line>
+          </svg>
+        </div>
+        <figcaption>
+          两行的方框 x 坐标完全一致,只有箭头方向相反——这就是两家在控制面上的全部区别。<span class="fl-t">FlClash</span> 里核心是客户端、App 是服务端;<span class="vg-t">Verge</span> 里 GUI 是客户端、核心是服务端。前者的代价是自己维护一整套协议,后者则要跟着上游 API 的变动走。
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="forks">
+      <h2>四个分歧点</h2>
+      <p class="sec-note">真正决定"基础设施架构"长什么样的地方</p>
+      <div class="forks">
+
+        <div class="fork">
+          <div class="fork-head">
+            <span class="fork-num">01</span>
+            <h3>核心是自有的,还是上游的</h3>
+          </div>
+          <div class="fork-grid">
+            <div class="side fl">
+              <p class="side-tag">FlClash</p>
+              <p>维护一个 mihomo 私有 fork,子模块钉死 SHA <code>70f0570…</code>,靠 <code>go.mod</code> 的 <code>replace</code> 引入。版本完全确定、可复现,但<strong>跟不上上游</strong>——上游的修复要自己 rebase。</p>
+            </div>
+            <div class="side vg">
+              <p class="side-tag">Verge</p>
+              <p>每次构建拉上游最新 mihomo。<strong>永远跟得上</strong>,但同一个 commit 在不同时间构建会得到不同的核心,核心行为可能随上游悄悄漂移。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fork">
+          <div class="fork-head">
+            <span class="fork-num">02</span>
+            <h3>控制面谁说了算</h3>
+          </div>
+          <div class="fork-grid">
+            <div class="side fl">
+              <p class="side-tag">FlClash</p>
+              <p>自造协议、自己实现服务端。可控性最高,连 Windows 上还要额外校验命名管道对端 PID 是不是 helper 报告的那个。</p>
+              <p>代价:这套协议得自己长期维护,而且核心的既有能力(API)被绕过了。</p>
+            </div>
+            <div class="side vg">
+              <p class="side-tag">Verge</p>
+              <p>直接用核心自带 REST API,只把传输从 TCP 换成管道/socket(默认 TCP 端口是关的)。省事,但要处理 API 兼容。</p>
+              <p>配套细节:管道 SDDL 收紧到仅属主 + SYSTEM + Administrators。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fork">
+          <div class="fork-head">
+            <span class="fork-num">03</span>
+            <h3>提权产物在不在仓库里</h3>
+          </div>
+          <div class="fork-grid">
+            <div class="side fl">
+              <p class="side-tag">FlClash</p>
+              <p>helper 服务是仓库内的 Rust 源码(<code>services/helper/</code>),读写改都在一起。Windows 下装成 <code>AutoStart</code> 的 LocalSystem 服务,启动核心前会比对编译期嵌入的 <code>CORE_SHA256</code>。</p>
+            </div>
+            <div class="side vg">
+              <p class="side-tag">Verge</p>
+              <p>服务在另一个仓库,以预编译二进制下载。于是<strong>必须</strong>有协议版本协商——<code>MIN_REQUIRED_SERVICE_REVISION</code>、<code>NeedsReinstall</code>、能力探测、不匹配就降级回 sidecar。</p>
+              <p>换来的是服务能独立于 GUI 升级。</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="fork">
+          <div class="fork-head">
+            <span class="fork-num">04</span>
+            <h3>macOS 两条完全不同的路</h3>
+          </div>
+          <div class="fork-grid">
+            <div class="side fl">
+              <p class="side-tag">FlClash</p>
+              <p>没有 helper。用 <code>osascript</code> 提权执行 <code>chown root:admin &amp;&amp; chmod +sx</code>,把核心<strong>设成 setuid root</strong>。因为核心成了 root,还得反向给用户主目录补一条继承 ACL,让它还能写进去。</p>
+            </div>
+            <div class="side vg">
+              <p class="side-tag">Verge</p>
+              <p>正规的 <strong>launchd LaunchDaemon</strong>,装到 <code>/Library/LaunchDaemons/</code>。安装时走 <code>osascript … with administrator privileges</code>。</p>
+              <p>两家都<strong>没有</strong>用 NetworkExtension。</p>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <section id="shared">
+      <h2>两边都没写的</h2>
+      <p class="sec-note">"VPN 基础设施"里最难的那几块,两家客户端都没实现</p>
+      <p>
+        这可能是整份对比里最该记住的一条。上面那些差异都在<strong>编排层</strong>,而真正干活的<strong>数据面</strong>,两家都交给了 mihomo。
+      </p>
+      <ul class="delegated">
+        <li>
+          <span class="what">TUN 网卡</span>
+          <span class="detail">两家仓库里 <code>wintun</code> 都是<strong>零命中</strong>——没有驱动、没有 DLL、没有安装步骤(Verge 只在历史 changelog 里留下两处旧版本的字样)。网卡由 mihomo 内嵌的 wintun 自己释放,客户端只负责往配置里写那个 <code>tun:</code> 块。</span>
+        </li>
+        <li>
+          <span class="what">路由表</span>
+          <span class="detail">两边都<strong>没有一行</strong> <code>netsh</code> / <code>route add</code> / netlink 代码。全靠 <code>auto-route: true</code> 丢给核心。服务端 IP 的绕过路由也是核心装的。</span>
+        </li>
+        <li>
+          <span class="what">DNS 解析</span>
+          <span class="detail">fake-ip、<code>dns-hijack: any:53</code>、fallback 过滤,全是写进 YAML 的 mihomo 配置。客户端没有解析器、没有 DNS 缓存。</span>
+        </li>
+        <li>
+          <span class="what">代理协议</span>
+          <span class="detail">出站、嗅探、规则引擎——客户端一行都没实现,全是核心的。</span>
+        </li>
+        <li>
+          <span class="what">唯一的 OS 级 DNS 操作</span>
+          <span class="detail">两边都只在 <strong>macOS</strong> 上动系统 DNS,而且都往里面钉一个国内公共解析:FlClash 钉 <code>223.5.5.5</code>,Verge 钉 <code>114.114.114.114</code>。但<strong>触发条件不同</strong>——Verge 那边限定在 fake-ip 分支里,配置显式写 <code>redir-host</code> 就不会钉。所以这是个行为差异,不是相同做法。</span>
+        </li>
+      </ul>
+
+      <div class="callout">
+        <h3>共同的失败模式</h3>
+        <p>
+          两家都会<strong>静默丢掉 TUN</strong>。FlClash 的 helper 起不来或核心校验失败时,退回非提权核心,TUN 就没了——不报错。Verge 在非管理员且没装服务时,强制关掉 TUN 并把偏好<strong>持久化改掉</strong>,再给个提示。
+        </p>
+        <p>
+          这就是"看起来连上了、实际没走全局"这类体验的来源。两家的判定逻辑也都是显式的:Verge 是 <code>RunState::tun_capable() = is_admin || service_usable()</code>。
+        </p>
+      </div>
+    </section>
+
+    <section id="caveats">
+      <h2>读取范围</h2>
+      <p class="sec-note">这份对比没看到什么</p>
+      <div class="caveats">
+        <div class="caveat">
+          <h3>FlClash 的 mihomo fork 没读到</h3>
+          <p><code>core/Clash.Meta</code> 是 git 子模块,浅克隆是空目录。凡涉及核心内部(Windows TUN 网卡具体怎么建、路由怎么装)的结论,都是"客户端侧没有这段代码"的推断,不是直接读到的实现。子模块拉下来就能补上。</p>
+        </div>
+        <div class="caveat">
+          <h3>Verge 的服务端根本不在这个仓库</h3>
+          <p>提权服务在外部仓库 <code>clash-verge-service-ipc</code>,以预编译二进制形式引入。所以它的 IPC 线格式细节、它内部怎么做提权操作,都没有源码可读——只能从客户端侧的调用与能力协商反推。</p>
+        </div>
+        <div class="caveat">
+          <h3>两边的核心本身都没读源码</h3>
+          <p>FlClash 是子模块没拉;Verge 用的是上游 stock 二进制。涉及 mihomo 内部行为(fake-ip 具体实现、wintun 释放时机、路由安装顺序)的部分,两份报告都只能标注为"由核心负责",没有验证。</p>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>源码:C:\Users\J\clash-compare\FlClash(c7be702)、C:\Users\J\clash-compare\clash-verge-rev(22e3f1a)。均为浅克隆,只取最新一版。</p>
+    <p>文中所有 file:line 引用取自上述两个 commit。DNS 一节已按后续复核修正:Verge 的 macOS 系统 DNS 钉定仅在 fake-ip 分支触发。</p>
+  </footer>
+
+</div>

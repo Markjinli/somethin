@@ -1,9 +1,16 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>FlClash 与 Verge 网络层对比</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
 
 <style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
   :root {
     --ground: #F6F7F9;
     --surface: #FFFFFF;
@@ -76,10 +83,43 @@
     padding-block: 0 96px;
   }
 
+  /* ---------- 站内导航 ---------- */
+
+  .sitenav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+
+  .sitenav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 9px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .sitenav a:hover,
+  .sitenav a:focus-visible {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface);
+  }
+
+  .sitenav .here {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface-2);
+  }
+
   /* ---------- masthead ---------- */
 
   .masthead {
-    padding-block: 56px 32px;
+    padding-block: 40px 32px;
     border-bottom: 1px solid var(--rule);
   }
 
@@ -566,8 +606,15 @@
     * { animation: none !important; transition: none !important; }
   }
 </style>
+</head>
+<body>
 
 <div class="wrap">
+
+  <nav class="sitenav" aria-label="站内导航">
+    <a href="./" class="here" aria-current="page">FlClash 与 Verge 网络层对比</a>
+    <a href="./licenses.html">FlClash 与 Verge 许可证对比</a>
+  </nav>
 
   <header class="masthead">
     <p class="eyebrow">源码级对比 · 2026-09-22</p>
@@ -882,6 +929,9 @@
   <footer>
     <p>源码:C:\Users\J\clash-compare\FlClash(c7be702)、C:\Users\J\clash-compare\clash-verge-rev(22e3f1a)。均为浅克隆,只取最新一版。</p>
     <p>文中所有 file:line 引用取自上述两个 commit。DNS 一节已按后续复核修正:Verge 的 macOS 系统 DNS 钉定仅在 fake-ip 分支触发。</p>
+    <p>配套页面:<a href="./licenses.html">FlClash 与 Verge 许可证对比</a> —— 讲两家的许可证、GPL 义务边界和血统来源。</p>
   </footer>
 
 </div>
+</body>
+</html>

@@ -1,0 +1,982 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>FlClash 与 Verge 许可证对比</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap">
+
+<style>
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; }
+  /* 语义色按"可以 / 不可以 / 有争议"编码,而不是按项目编码 ——
+     这一页的核心就是义务,不是两家的身份。项目归属交给等宽字标签和位置。 */
+  :root {
+    --ground: #F5F6F8;
+    --surface: #FFFFFF;
+    --surface-2: #EEF1F4;
+    --ink: #14181D;
+    --ink-soft: #333B45;
+    --muted: #5C6672;
+    --rule: #DBE0E6;
+    --rule-strong: #C0C8D2;
+    --may: #1E6B4B;
+    --may-wash: #E7F2EC;
+    --maynot: #9A2B2B;
+    --maynot-wash: #F8E9E9;
+    --risk: #8A6100;
+    --risk-wash: #F8F0DC;
+    --sans: 'Archivo', system-ui, -apple-system, 'Segoe UI', 'Microsoft YaHei', sans-serif;
+    --mono: 'IBM Plex Mono', ui-monospace, 'Cascadia Mono', Consolas, 'Microsoft YaHei', monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #0E1114;
+      --surface: #151A1F;
+      --surface-2: #1B2127;
+      --ink: #E6EAEF;
+      --ink-soft: #C4CCD6;
+      --muted: #939DAA;
+      --rule: #232A32;
+      --rule-strong: #39424D;
+      --may: #5FBF8E;
+      --may-wash: #10261C;
+      --maynot: #E08383;
+      --maynot-wash: #2A1616;
+      --risk: #D9A93E;
+      --risk-wash: #2A2113;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #0E1114;
+    --surface: #151A1F;
+    --surface-2: #1B2127;
+    --ink: #E6EAEF;
+    --ink-soft: #C4CCD6;
+    --muted: #939DAA;
+    --rule: #232A32;
+    --rule-strong: #39424D;
+    --may: #5FBF8E;
+    --may-wash: #10261C;
+    --maynot: #E08383;
+    --maynot-wash: #2A1616;
+    --risk: #D9A93E;
+    --risk-wash: #2A2113;
+  }
+
+  body {
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 16px;
+    line-height: 1.65;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1000px;
+    margin-inline: auto;
+    padding-inline: 20px;
+    padding-block: 0 96px;
+  }
+
+  .sitenav {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    padding-block: 18px;
+    border-bottom: 1px solid var(--rule);
+    font-family: var(--mono);
+    font-size: 11.5px;
+  }
+
+  .sitenav a {
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 9px;
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+  }
+
+  .sitenav a:hover,
+  .sitenav a:focus-visible {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface);
+  }
+
+  .sitenav .here {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface-2);
+  }
+
+  .masthead { padding-block: 48px 30px; border-bottom: 1px solid var(--rule); }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.13em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin: 0 0 18px;
+  }
+
+  h1 {
+    font-size: clamp(29px, 5vw, 44px);
+    line-height: 1.09;
+    font-weight: 700;
+    letter-spacing: -0.022em;
+    text-wrap: balance;
+    margin: 0 0 18px;
+    max-width: 24ch;
+  }
+
+  .standfirst {
+    font-size: 17.5px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 62ch;
+    margin: 0;
+  }
+
+  .toc {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 10;
+    background: var(--ground);
+    border-bottom: 1px solid var(--rule);
+    margin-bottom: 8px;
+  }
+
+  .toc ul {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 4px 6px;
+    list-style: none;
+    margin: 0;
+    padding: 11px 0;
+  }
+
+  .toc a {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--muted);
+    text-decoration: none;
+    padding: 4px 9px;
+    border: 1px solid transparent;
+    border-radius: 3px;
+  }
+
+  .toc a:hover,
+  .toc a:focus-visible {
+    color: var(--ink);
+    border-color: var(--rule-strong);
+    background: var(--surface);
+  }
+
+  section { padding-block: 46px 8px; scroll-margin-top: 78px; }
+  section + section { border-top: 1px solid var(--rule); }
+
+  h2 {
+    font-size: 25px;
+    font-weight: 600;
+    letter-spacing: -0.014em;
+    line-height: 1.2;
+    text-wrap: balance;
+    margin: 0 0 8px;
+  }
+
+  .sec-note {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    letter-spacing: 0.05em;
+    color: var(--muted);
+    margin: 0 0 26px;
+  }
+
+  p { max-width: 70ch; margin: 0 0 18px; }
+  .lede { font-size: 18px; line-height: 1.62; color: var(--ink-soft); }
+  strong { font-weight: 600; color: var(--ink); }
+
+  code {
+    font-family: var(--mono);
+    font-size: 0.855em;
+    background: var(--surface-2);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 1px 5px;
+    overflow-wrap: anywhere;
+  }
+
+  /* ---------- 更正 ---------- */
+
+  .correction {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--risk);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 20px 22px 22px;
+    margin-bottom: 26px;
+  }
+
+  .correction .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    color: var(--risk);
+    border: 1px solid var(--risk);
+    border-radius: 2px;
+    padding: 1px 6px;
+    margin-bottom: 12px;
+  }
+
+  .correction h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 10px;
+    letter-spacing: -0.01em;
+  }
+
+  .correction p { font-size: 15px; line-height: 1.6; color: var(--ink-soft); margin-bottom: 12px; }
+  .correction p:last-child { margin-bottom: 0; }
+
+  /* ---------- 表格 ---------- */
+
+  .table-scroll {
+    overflow-x: auto;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+  }
+
+  table { border-collapse: collapse; width: 100%; min-width: 680px; font-size: 14px; }
+
+  thead th {
+    background: var(--surface-2);
+    text-align: left;
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--rule-strong);
+    white-space: nowrap;
+    color: var(--muted);
+  }
+
+  tbody th {
+    text-align: left;
+    font-weight: 500;
+    font-size: 13.5px;
+    color: var(--ink);
+    padding: 14px 16px;
+    vertical-align: top;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  tbody td {
+    padding: 14px 16px;
+    vertical-align: top;
+    color: var(--ink-soft);
+    line-height: 1.55;
+    border-bottom: 1px solid var(--rule);
+    border-left: 1px solid var(--rule);
+  }
+
+  tbody tr:last-child th,
+  tbody tr:last-child td { border-bottom: none; }
+
+  /* 最后一列只放一个短标签 —— 让它缩到内容宽度,把富余留给许可证那列 */
+  table th:last-child,
+  table td:last-child { width: 1%; white-space: nowrap; }
+
+  .lic {
+    font-family: var(--mono);
+    font-weight: 600;
+    font-size: 13px;
+    white-space: nowrap;
+  }
+
+  .lic-gpl { color: var(--maynot); }
+  .lic-mit { color: var(--risk); }
+
+  .chip {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    border-radius: 2px;
+    padding: 1px 6px;
+    white-space: nowrap;
+  }
+
+  .chip-ok { color: var(--may); background: var(--may-wash); }
+  .chip-research { color: var(--risk); background: var(--risk-wash); }
+
+  /* ---------- 可以 / 不可以 ---------- */
+
+  .perm {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(290px, 1fr));
+    gap: 16px;
+    margin-top: 24px;
+  }
+
+  .perm-col {
+    border: 1px solid var(--rule);
+    border-top: 3px solid var(--accent);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 18px 20px 20px;
+  }
+
+  .perm-col.yes { --accent: var(--may); }
+  .perm-col.no { --accent: var(--maynot); }
+
+  .perm-col h3 {
+    font-family: var(--mono);
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+
+  .perm-col ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 13px; }
+
+  .perm-col li { display: grid; grid-template-columns: 18px 1fr; gap: 10px; align-items: start; }
+
+  .mark {
+    font-family: var(--mono);
+    font-size: 14px;
+    font-weight: 600;
+    line-height: 1.5;
+    color: var(--accent);
+  }
+
+  .perm-col .t { font-size: 14.5px; font-weight: 600; color: var(--ink); display: block; margin-bottom: 2px; }
+  .perm-col .d { font-size: 14px; line-height: 1.55; color: var(--muted); }
+
+  /* ---------- 命名限制警告 ---------- */
+
+  .warning {
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--risk);
+    border-radius: 3px;
+    background: var(--surface);
+    padding: 20px 22px;
+    margin-bottom: 22px;
+  }
+
+  .warning .tag {
+    display: inline-block;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    font-weight: 600;
+    letter-spacing: 0.11em;
+    color: var(--risk);
+    border: 1px solid var(--risk);
+    border-radius: 2px;
+    padding: 1px 6px;
+    margin-bottom: 12px;
+  }
+
+  blockquote {
+    margin: 16px 0;
+    padding: 2px 0 2px 16px;
+    border-left: 2px solid var(--rule-strong);
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  blockquote p { margin: 0 0 8px; max-width: none; font-size: 13px; }
+  blockquote p:last-child { margin-bottom: 0; }
+  blockquote cite { font-style: normal; color: var(--muted); font-size: 11.5px; }
+
+  /* ---------- 时间线 ---------- */
+
+  .timeline { list-style: none; margin: 26px 0 0; padding: 0; }
+
+  .timeline li {
+    display: grid;
+    grid-template-columns: 118px 1fr;
+    gap: 4px 20px;
+    padding: 14px 0;
+    border-bottom: 1px solid var(--rule);
+  }
+
+  .timeline li:first-child { border-top: 1px solid var(--rule); }
+
+  .timeline .when {
+    font-family: var(--mono);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--muted);
+    padding-top: 1px;
+  }
+
+  .timeline .what { font-size: 14.5px; line-height: 1.58; color: var(--ink-soft); }
+  .timeline .what b { font-weight: 600; color: var(--ink); }
+
+  .timeline li.mark-row { background: var(--risk-wash); }
+  .timeline li.mark-row .when { color: var(--risk); }
+
+  @media (max-width: 600px) {
+    .timeline li { grid-template-columns: 1fr; gap: 3px; }
+  }
+
+  /* ---------- 图 ---------- */
+
+  figure {
+    margin: 22px 0 0;
+    border: 1px solid var(--rule);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 22px 20px 18px;
+  }
+
+  .fig-scroll { overflow-x: auto; }
+
+  figure svg {
+    display: block;
+    width: 100%;
+    min-width: 600px;
+    height: auto;
+    color: var(--ink-soft);
+  }
+
+  figure svg text { font-family: var(--sans); }
+  figure svg text.mono { font-family: var(--mono); }
+  figure svg .ink-risk { fill: var(--risk); }
+  figure svg .ink-may { fill: var(--may); }
+  figure svg .stroke-risk { stroke: var(--risk); }
+  figure svg .bar-may { fill: var(--may); }
+  figure svg marker.ah-risk path { fill: var(--risk); }
+
+  figcaption {
+    font-size: 13.5px;
+    line-height: 1.55;
+    color: var(--muted);
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid var(--rule);
+  }
+
+  /* ---------- 建议 ---------- */
+
+  .pick {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin-top: 22px;
+  }
+
+  .pick-row {
+    display: grid;
+    grid-template-columns: 1fr 128px;
+    gap: 8px 20px;
+    align-items: center;
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 15px 18px;
+  }
+
+  .pick-row .cond { font-size: 14.5px; line-height: 1.55; color: var(--ink-soft); }
+  .pick-row .ans {
+    font-family: var(--mono);
+    font-size: 13px;
+    font-weight: 600;
+    color: var(--may);
+    text-align: right;
+    white-space: nowrap;
+  }
+
+  @media (max-width: 600px) {
+    .pick-row { grid-template-columns: 1fr; gap: 6px; }
+    .pick-row .ans { text-align: left; }
+  }
+
+  .fixes { list-style: none; margin: 22px 0 0; padding: 0; display: flex; flex-direction: column; gap: 12px; }
+
+  .fixes li {
+    background: var(--surface);
+    border: 1px solid var(--rule);
+    border-radius: 3px;
+    padding: 15px 18px;
+    font-size: 14.5px;
+    line-height: 1.58;
+    color: var(--ink-soft);
+  }
+
+  .fixes .who {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    font-weight: 600;
+    color: var(--muted);
+    letter-spacing: 0.06em;
+    display: block;
+    margin-bottom: 5px;
+  }
+
+  footer {
+    margin-top: 54px;
+    padding-top: 26px;
+    border-top: 1px solid var(--rule);
+  }
+
+  footer p {
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.7;
+    color: var(--muted);
+    max-width: 84ch;
+    margin: 0 0 10px;
+    overflow-wrap: anywhere;
+  }
+
+  a { color: var(--may); }
+  a:focus-visible { outline: 2px solid var(--may); outline-offset: 2px; }
+
+  @media (prefers-reduced-motion: reduce) {
+    * { animation: none !important; transition: none !important; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+
+  <nav class="sitenav" aria-label="站内导航">
+    <a href="./">FlClash 与 Verge 网络层对比</a>
+    <a href="./licenses.html" class="here" aria-current="page">FlClash 与 Verge 许可证对比</a>
+  </nav>
+
+  <header class="masthead">
+    <p class="eyebrow">源码级核实 · 2026-09-22</p>
+    <h1>FlClash 与 Verge 许可证对比</h1>
+    <p class="standfirst">
+      两套代理客户端的许可证、GPL 义务边界、上游附加条款,以及血统来源。为"要不要在它们基础上做二次开发"这个问题服务。
+    </p>
+  </header>
+
+  <nav class="toc" aria-label="目录">
+    <ul>
+      <li><a href="#correction">先更正一处</a></li>
+      <li><a href="#licenses">许可证全景</a></li>
+      <li><a href="#obligations">可以 / 不可以</a></li>
+      <li><a href="#naming">命名限制</a></li>
+      <li><a href="#lineage">血统时间线</a></li>
+      <li><a href="#risk">两家风险面</a></li>
+      <li><a href="#pick">怎么选</a></li>
+      <li><a href="#verify">核实状态</a></li>
+    </ul>
+  </nav>
+
+  <main>
+
+    <section id="correction">
+      <h2>先更正一处</h2>
+      <p class="sec-note">这一页的头号发现,是一个足以骗过工具的陷阱</p>
+
+      <div class="correction">
+        <span class="tag">更正</span>
+        <h3>mihomo 的核心不是 MIT,是 GPL-3.0</h3>
+        <p>
+          早期版本的本页写过"核心是 MIT,所以 GPL 义务只来自客户端外壳"。<strong>这条是错的。</strong>
+        </p>
+        <p>
+          原因是一个很隐蔽的坑:<code>MetaCubeX/mihomo</code> 的<strong>默认分支是 <code>main</code>,而 <code>main</code> 里不是代理核心</strong> —— 是一个也叫 <code>mihomo</code> 的 Python 包(崩坏:星穹铁道 API 客户端),MIT 协议。真正的 Go 核心在 <strong><code>Meta</code> 分支</strong>上,是 GPL-3.0。
+        </p>
+        <p>
+          GitHub 的许可证徽章和 <code>/repos/&lt;owner&gt;/&lt;repo&gt;/license</code> 接口<strong>都只读默认分支</strong>,所以两边都报 MIT。
+        </p>
+      </div>
+
+      <p>
+        同一个坑还套着第二层。<code>chen08209/Clash.Meta</code>(FlClash 的核心 fork)默认分支也是 <code>main</code>,同样显示 MIT;但 FlClash 实际用的是 <code>FlClash</code> 分支,是 <strong>GPL-3.0</strong>。
+      </p>
+
+      <figure>
+        <div class="fig-scroll">
+          <svg viewBox="0 0 720 316" role="img" aria-label="陷阱机制图:MetaCubeX/mihomo 是一个仓库,main 分支是 MIT 的 Python 项目,Meta 分支才是 GPL-3.0 的 Go 代理核心;GitHub 的许可证徽章与接口只读默认分支,因此读到 MIT。">
+            <defs>
+              <marker id="ah-risk" class="ah-risk" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto">
+                <path d="M0.5,1 L9,5 L0.5,9 Z"></path>
+              </marker>
+            </defs>
+
+            <!-- repo box -->
+            <rect x="210" y="18" width="300" height="52" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text class="mono" x="360" y="40" font-size="13.5" font-weight="600" text-anchor="middle" fill="currentColor">MetaCubeX / mihomo</text>
+            <text class="mono" x="360" y="58" font-size="11.5" text-anchor="middle" fill="currentColor" opacity="0.65">一个仓库 · 两个分支</text>
+
+            <!-- split -->
+            <path d="M360,70 L360,104 M185,104 L535,104 M185,104 L185,132 M535,104 L535,132"
+                  fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.45"></path>
+
+            <!-- main branch -->
+            <rect x="60" y="132" width="250" height="78" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text class="mono" x="76" y="156" font-size="12.5" font-weight="600" fill="currentColor">main 分支（默认）</text>
+            <text x="76" y="177" font-size="13" fill="currentColor" opacity="0.8">Python · 崩铁 API 客户端</text>
+            <text class="mono ink-risk" x="76" y="198" font-size="13" font-weight="600">MIT</text>
+
+            <!-- Meta branch -->
+            <rect class="bar-may" x="410" y="132" width="3" height="78"></rect>
+            <rect x="413" y="132" width="247" height="78" rx="4" fill="none" stroke="currentColor" stroke-width="1.4" opacity="0.55"></rect>
+            <text class="mono" x="429" y="156" font-size="12.5" font-weight="600" fill="currentColor">Meta 分支</text>
+            <text x="429" y="177" font-size="13" fill="currentColor" opacity="0.8">Go 代理核心 —— 真正在用的</text>
+            <text class="mono ink-may" x="429" y="198" font-size="13" font-weight="600">GPL-3.0</text>
+
+            <!-- tool -->
+            <rect class="stroke-risk" x="60" y="248" width="250" height="50" rx="4" fill="none" stroke-width="1.5"></rect>
+            <text class="mono" x="185" y="270" font-size="12" text-anchor="middle" fill="currentColor">GitHub 徽章 / license 接口</text>
+            <text class="mono ink-risk" x="185" y="288" font-size="11" text-anchor="middle">只读默认分支</text>
+
+            <line class="stroke-risk" x1="185" y1="248" x2="185" y2="214" stroke-width="2" marker-end="url(#ah-risk)"></line>
+            <text class="mono ink-risk" x="200" y="235" font-size="11">读到 MIT</text>
+          </svg>
+        </div>
+        <figcaption>
+          陷阱的机制:仓库把无关的 Python 项目放在默认分支上,而所有自动化工具都只认默认分支 —— 于是徽章、API、以及靠它们吃饭的聚合站点,全都报 MIT。<strong>要拿到真实许可证,必须显式指定那个分支。</strong>绿色标记的那一支才是真正被 FlClash 和 Verge 编译进产品的核心。
+        </figcaption>
+      </figure>
+    </section>
+
+    <section id="licenses">
+      <h2>许可证全景</h2>
+      <p class="sec-note">整条链路从上到下,没有一处是宽松许可</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr>
+              <th scope="col">组件</th>
+              <th scope="col">许可证</th>
+              <th scope="col">核实状态</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">FlClash 客户端</th>
+              <td><span class="lic lic-gpl">GPL-3.0</span><br>LICENSE 为标准全文 674 行,无附加条款</td>
+              <td><span class="chip chip-ok">已读原文</span></td>
+            </tr>
+            <tr>
+              <th scope="row">FlClash 核心<br><code>chen08209/Clash.Meta</code> @ <code>FlClash</code></th>
+              <td><span class="lic lic-gpl">GPL-3.0</span><br>注意:默认分支 <code>main</code> 显示 MIT,是继承来的,不是实际使用的分支</td>
+              <td><span class="chip chip-ok">已读该分支</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Clash Verge Rev 客户端</th>
+              <td><span class="lic lic-gpl">GPL-3.0-only</span><br>唯一一家在 manifest 里明示的:<code>package.json</code> 与 <code>Cargo.toml</code> 均写明</td>
+              <td><span class="chip chip-ok">已读 manifest</span></td>
+            </tr>
+            <tr>
+              <th scope="row">Verge 核心<br>(sidecar mihomo)</th>
+              <td><span class="lic lic-gpl">GPL-3.0</span><br>上游 stock 二进制,未修改;外加一条命名限制(见下节)</td>
+              <td><span class="chip chip-ok">已读原文</span></td>
+            </tr>
+            <tr>
+              <th scope="row">原版 Clash Verge<br><code>zzzgydi/clash-verge</code></th>
+              <td><span class="lic lic-gpl">GPL-3.0</span><br>已于 2023-11-03 由作者本人 archive,原文仍可读</td>
+              <td><span class="chip chip-ok">已读原文</span></td>
+            </tr>
+            <tr>
+              <th scope="row">原版 Clash<br><code>Dreamacro/clash</code></th>
+              <td><span class="lic lic-mit">MIT → GPL-3.0</span><br>2018 年 MIT,2020 年起转为 GPL-3.0。仓库已被作者删除</td>
+              <td><span class="chip chip-research">仅研究</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p style="margin-top:24px">
+        <strong>结论:整条链路从头到尾都是 GPL-3.0。</strong>不存在"核心可以自由用、只有外壳受约束"这种空间。所以许可证本身<strong>不是</strong>这两家的选型依据 —— 约束完全对等。
+      </p>
+    </section>
+
+    <section id="obligations">
+      <h2>可以 / 不可以</h2>
+      <p class="sec-note">GPL-3.0-only 下,你能做什么、不能做什么 —— 两家完全一样</p>
+
+      <div class="perm">
+        <div class="perm-col yes">
+          <h3>可以</h3>
+          <ul>
+            <li>
+              <span class="mark">+</span>
+              <span><span class="t">商用</span><span class="d">无任何限制,可以卖。</span></span>
+            </li>
+            <li>
+              <span class="mark">+</span>
+              <span><span class="t">任意修改</span><span class="d">改多少都行,不需要告知任何人。</span></span>
+            </li>
+            <li>
+              <span class="mark">+</span>
+              <span><span class="t">闭源「开发」</span><span class="d">自己内部改、不对外发,完全合法,没有开源义务。</span></span>
+            </li>
+            <li>
+              <span class="mark">+</span>
+              <span><span class="t">收费分发</span><span class="d">可以收钱 —— 但必须同时给源码。</span></span>
+            </li>
+          </ul>
+        </div>
+        <div class="perm-col no">
+          <h3>不可以</h3>
+          <ul>
+            <li>
+              <span class="mark">−</span>
+              <span><span class="t">闭源分发二进制</span><span class="d"><strong>最容易踩的坑。</strong>只要把编译产物发出去(哪怕免费),就必须提供完整对应源码,而且你的改动也必须是 GPL-3.0-only。</span></span>
+            </li>
+            <li>
+              <span class="mark">−</span>
+              <span><span class="t">加附加限制</span><span class="d">不能加"禁止商用""禁止修改"这类条款。GPL 不允许在下游收紧。</span></span>
+            </li>
+            <li>
+              <span class="mark">−</span>
+              <span><span class="t">上 App Store</span><span class="d">GPL 与苹果商店的使用限制条款冲突。两家都走不了这条路。</span></span>
+            </li>
+            <li>
+              <span class="mark">−</span>
+              <span><span class="t">名字里带 <code>mihomo</code></span><span class="d">上游附加条款,见下一节。</span></span>
+            </li>
+            <li>
+              <span class="mark">−</span>
+              <span><span class="t">连带分发那两个专有组件</span><span class="d">见"两家风险面"。两个都要清掉。</span></span>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <p style="margin-top:24px">
+        补充一句边界情况:<strong>SaaS 不分发不触发 GPL</strong>(改完只在自己服务器上跑,没有义务开源)。但这个例外对代理客户端没有意义 —— 这东西的价值就在于发给用户。
+      </p>
+    </section>
+
+    <section id="naming">
+      <h2>命名限制</h2>
+      <p class="sec-note">mihomo 在 GPL-3.0 之外附加的条款,对你起名有直接约束</p>
+
+      <div class="warning">
+        <span class="tag">上游附加条款</span>
+        <blockquote>
+          <p>This software is released under the GPL-3.0 license.</p>
+          <p><strong>In addition, any downstream projects not affiliated with <code>MetaCubeX</code> shall not contain the word <code>mihomo</code> in their names.</strong></p>
+          <cite>—— <code>MetaCubeX/mihomo</code> 的 <code>Meta</code> 分支 README,紧随许可证声明之后</cite>
+        </blockquote>
+        <p style="font-size:15px;line-height:1.6;color:var(--ink-soft);margin:0">
+          这是 GPL-3.0 之外的<strong>附加限制</strong>。GPL §7 是否允许这种条款<strong>在社区里有争议,至今没有法律裁决</strong>。所以它的实际效力不确定,但风险是真实的 —— 因为上游有实际的施压手段。
+        </p>
+      </div>
+
+      <p><strong>这不是假设,已经真打过一架。</strong>下游项目 <code>Mihomo Party</code> 拒绝改名,核心团队公开发话并一度<strong>威胁停止核心开发</strong>:</p>
+
+      <blockquote>
+        <p>任何名字中包含 mihomo 字样的 GUI 客户端均与本项目无关,且违反授权协议,请勿使用这些恶意软件</p>
+        <cite>—— MetaCubeX 官方 Telegram 频道</cite>
+      </blockquote>
+
+      <p>结局是 <code>Mihomo Party</code> 改名成了 <strong>Clash Party</strong>(仓库迁到 <code>mihomo-party-org/clash-party</code>,站点迁到 clashparty.org),核心开发随后恢复。</p>
+
+      <p style="margin-top:24px"><strong>对你的实际约束:</strong></p>
+
+      <ul class="fixes">
+        <li>
+          <span class="who">必须避开</span>
+          你的 fork <strong>名字里绝不能出现 <code>mihomo</code></strong>。注意限制的是 <code>mihomo</code> 这个词,<strong>不是 "Clash"</strong> —— 我找遍了,没有任何针对 "Clash" 这个词的商标政策或名称限制。
+        </li>
+        <li>
+          <span class="who">FlClash 现状</span>
+          干净。它用 <code>core/Clash.Meta</code> 作子模块目录名,项目名也不含 mihomo。
+        </li>
+        <li>
+          <span class="who">Verge 现状</span>
+          擦边。项目名不含 mihomo,但它捆绑的核心二进制叫 <code>verge-mihomo</code> —— 含了那个词。严格解释下处于灰色地带,不过上游从未对 Verge 表态。
+        </li>
+      </ul>
+    </section>
+
+    <section id="lineage">
+      <h2>血统时间线</h2>
+      <p class="sec-note">两家都接得干净 —— 没有版权阴影</p>
+
+      <p>
+        这一节回答一个不写在许可证里、但真实影响长期风险的问题:<strong>这两个项目的来源清不清白?</strong> 结论是:清白的。没有 DMCA,没有授权纠纷,没有原作者抗议。
+      </p>
+
+      <ul class="timeline">
+        <li>
+          <span class="when">2018-09</span>
+          <span class="what"><b>Dreamacro/clash 以 MIT 发布</b>(经 Go module proxy 查得 v0.7.1 的 LICENSE)</span>
+        </li>
+        <li>
+          <span class="when">2020 起</span>
+          <span class="what">clash 转为 <b>GPL-3.0</b>,此后未再变更</span>
+        </li>
+        <li>
+          <span class="when">2021-05-20</span>
+          <span class="what">Clash.Meta 仓库建立(即后来的 mihomo,仓库重命名,创建日期保留)</span>
+        </li>
+        <li>
+          <span class="when">2023-08-15</span>
+          <span class="what"><b>FlClash 建立</b>。不是任何项目的 GitHub fork,作者此前也无同类项目</span>
+        </li>
+        <li class="mark-row">
+          <span class="when">2023-11-03</span>
+          <span class="what">
+            <b>生态删库潮。</b>Dreamacro/clash 被<b>作者本人删除</b>(不是 DMCA);<code>zzzgydi/clash-verge</code> 被作者本人 archive(21,922 star)。起因是前一天另一位开发者宣布停止更新,事件在社交平台发酵,多个项目主动避风头
+          </span>
+        </li>
+        <li>
+          <span class="when">2023-11-21</span>
+          <span class="what"><b>Clash Verge Rev 建立</b> —— 原版 archive 后 18 天。README 以"Continuation of Clash Verge"自我定位,致谢名单第一位是原作者</span>
+        </li>
+        <li>
+          <span class="when">2023-12-21</span>
+          <span class="what">chen08209 建立核心 fork <code>chen08209/Clash.Meta</code></span>
+        </li>
+        <li>
+          <span class="when">2025-02 前后</span>
+          <span class="what">mihomo 加入命名限制条款 → 与 Mihomo Party 公开冲突 → 对方改名 <b>Clash Party</b> → 争议平息</span>
+        </li>
+        <li>
+          <span class="when">2026-09-22</span>
+          <span class="what">本页数据核实日</span>
+        </li>
+      </ul>
+
+      <p style="margin-top:24px">
+        <strong>两个值得注意的点。</strong>其一,<code>zzzgydi</code>(原版 Clash Verge 作者)在 Rev 仓库里是<strong>最大贡献者(1022 commits)</strong> —— 这本身就说明交接是和平的。其二,从头到尾<strong>找不到原作者对 fork 的任何表态</strong>,无论支持还是反对;也找不到任何针对这两家的 GPL 投诉、DMCA 或授权纠纷。
+      </p>
+      <p>
+        唯一需要标注的是:<strong>Dreamacro/clash 被删的原因从未被公开解释过</strong>。流传的说法(监管压力、身份暴露)都被来源明确标为未经证实的传言,且没有开发者被捕。这件事没有给下游留下任何已知的版权主张。
+      </p>
+    </section>
+
+    <section id="risk">
+      <h2>两家风险面</h2>
+      <p class="sec-note">许可证既然对等,差异就全在这些地方</p>
+
+      <p>
+        下面这些跟许可证无关,是接手一个代码库时真正会绊到你的东西。<strong>这一节是两家唯一实质拉开差距的地方。</strong>
+      </p>
+
+      <ul class="fixes">
+        <li>
+          <span class="who">FLCLASH · 第三方专有组件 · 更要紧</span>
+          <code>windows/EnableLoopback.exe</code> —— <strong>Progress Software Corporation</strong> 的工具,<code>Copyright ©2003-2020</code>,<strong>All rights reserved,闭源</strong>,有有效代码签名。<strong>已提交进 git,随 Windows 版出货,并且被 <code>lib/views/tools.dart:204</code> 以提权方式实际执行。</strong>"All rights reserved" 意味着没有任何再分发授权。要清掉得连带删功能或换实现。
+        </li>
+        <li>
+          <span class="who">VERGE · 第三方专有组件 · 好处理</span>
+          <code>src-tauri/assets/fonts/SF-Pro.ttf</code> —— 苹果 SF Pro,23 MB,字体内部嵌着的授权原文明确写着 <em>"You may not embed the Apple Font in any software programs or other products"</em>,且要求使用者是注册苹果开发者。<strong>但我核实过它零引用</strong>:代码里没有、<code>resources</code> 是空的、没有 Info.plist 声明 —— <strong>不进分发包</strong>。删掉这一个文件问题即消失。
+        </li>
+        <li>
+          <span class="who">版权集中度</span>
+          <strong>FlClash:3 个贡献者</strong>(一人 231/233 commits,实质单人项目)。<strong>Verge:166 个贡献者。</strong>两家都没有 CLA,所以两家法律上都无法单方面改许可证 —— 但 FlClash 只需谈 1 个人,Verge 要谈 166 个。
+        </li>
+        <li>
+          <span class="who">单点风险</span>
+          FlClash 是单人项目,<strong>作者弃坑即终止</strong>。Verge 有 166 人 + 长尾,谁也拿不走,生态韧性明显更强。
+        </li>
+        <li>
+          <span class="who">许可证声明卫生</span>
+          Verge 在 manifest 里明示 <code>GPL-3.0-only</code>,规矩。<strong>FlClash 没有任何 manifest 声明</strong>,且 <code>plugins/proxy/LICENSE</code> 与 <code>plugins/rust_api/LICENSE</code> 的内容是字面一句 <code>TODO: Add your license here.</code>(Flutter 插件模板占位符,从未填)。法律上仓库根的 GPL-3.0 默认覆盖全部,不是陷阱,但说明卫生粗放。
+        </li>
+      </ul>
+    </section>
+
+    <section id="pick">
+      <h2>怎么选</h2>
+      <p class="sec-note">许可证对等,所以选型看技术栈和长期打算</p>
+
+      <p>
+        如果你的改动<strong>要分发</strong>(发二进制,免费也算),许可证层面两家<strong>完全等价</strong>,按下面的条件选:
+      </p>
+
+      <div class="pick">
+        <div class="pick-row">
+          <span class="cond">熟 Dart / Flutter,想要<strong>一个仓库搞定全部</strong>(含提权服务、含自己 fork 的核心)</span>
+          <span class="ans">FlClash</span>
+        </div>
+        <div class="pick-row">
+          <span class="cond">熟 Rust / Tauri,想要<strong>长期有人维护、生态大</strong></span>
+          <span class="ans">Verge</span>
+        </div>
+        <div class="pick-row">
+          <span class="cond">想将来有一天<strong>谈商业授权或改许可证</strong></span>
+          <span class="ans">FlClash</span>
+        </div>
+        <div class="pick-row">
+          <span class="cond">想<strong>向上游提 PR、影响项目方向</strong></span>
+          <span class="ans">Verge</span>
+        </div>
+        <div class="pick-row">
+          <span class="cond">不想碰专有二进制 —— 倾向删一个文件就完事</span>
+          <span class="ans">Verge</span>
+        </div>
+      </div>
+
+      <p style="margin-top:26px">
+        如果改动<strong>只在自己内部署、或者你本来就打算开源</strong>,那两家都行,纯按技术栈选。
+      </p>
+
+      <p style="margin-top:22px"><strong>不管选哪个,动手前先做这几件事:</strong></p>
+
+      <ul class="fixes">
+        <li><span class="who">选 FLCLASH</span>删掉 <code>windows/EnableLoopback.exe</code> 和 <code>lib/views/tools.dart</code> 里那个入口,或换成自己的 UWP 回环实现。</li>
+        <li><span class="who">选 VERGE</span><code>rm src-tauri/assets/fonts/SF-Pro.ttf</code>。它没被引用,删了不影响构建。</li>
+        <li><span class="who">两家都要</span>给项目起名时避开 <code>mihomo</code> 这个词。加上 GPL-3.0 的 LICENSE,并把改动的源码公开。</li>
+      </ul>
+    </section>
+
+    <section id="verify">
+      <h2>核实状态</h2>
+      <p class="sec-note">哪些是我自己读到的,哪些是二手研究</p>
+
+      <p>
+        这一页把两类结论分开了,因为它们的可靠度不同。凡是标 <span class="chip chip-ok">已读原文</span> 的,都是我在 2026-09-22 直接读仓库文件或调 API 得到的;标 <span class="chip chip-research">仅研究</span> 的,来自二手研究,我没有独立复核。
+      </p>
+
+      <ul class="fixes">
+        <li>
+          <span class="who">我直接核实的</span>
+          mihomo 默认分支为 <code>main</code> 且内容是 Python 项目;其 <code>Meta</code> 分支 LICENSE 为 GPL-3.0;<code>chen08209/Clash.Meta</code> 的 <code>FlClash</code> 分支为 GPL-3.0;两家的 LICENSE 文件逐字相同且为 GPL-3.0 标准全文;Verge 的 manifest 明示 <code>GPL-3.0-only</code>;<code>zzzgydi/clash-verge</code> 已 archive 且最后推送于 2023-11-03;<code>Dreamacro/clash</code> 返回 404;各仓库创建日期;mihomo 的命名限制条款原文;FlClash 的 <code>EnableLoopback.exe</code> 来源、签名与调用点;Verge 的 <code>SF-Pro.ttf</code> 零引用且不出货;贡献者数量(3 / 166)。
+        </li>
+        <li>
+          <span class="chip chip-research">仅研究</span>
+          原版 Clash 的 MIT→GPL-3.0 时间点(仓库已删,经 Go module proxy 间接查得);2023-11-02 那条引发删库潮的公告;删库潮的具体动机;mihomo 与 Mihomo Party 冲突的确切日期;MetaCubeX 官方频道原话的完整上下文。
+        </li>
+        <li>
+          <span class="chip chip-research">未证实 · 不作为结论</span>
+          删库潮的原因(流传说法均被来源标为传言);mihomo 当时是"设为私有"还是仅"归档";某论坛称 Google Play 版 FlClash 已易主并加了广告。
+        </li>
+      </ul>
+
+      <p style="margin-top:26px">
+        <strong>最后一句免责:</strong>这一页是对公开仓库文件的事实陈述,不是法律意见。GPL 的具体适用有很多判例依赖的细节,尤其 §7 附加条款那一条本身就存疑。<strong>要正式分发产品之前,请找律师复核。</strong>
+      </p>
+    </section>
+
+  </main>
+
+  <footer>
+    <p>数据核实日 2026-09-22。所有结论基于当日各仓库公开文件的状态。</p>
+    <p>配套页面:<a href="./">FlClash 与 Verge 网络层对比</a> —— 讲两家的 VPN 功能链路怎么搭的。</p>
+  </footer>
+
+</div>
+</body>
+</html>
